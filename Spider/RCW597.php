@@ -29,12 +29,15 @@ class RCW597 extends Baseclass
     public function run($time_lit = null)
     {
         $first_time = time();
+        if(empty($time_lit)){
+            $time_lit = 600;
+        }
         $i= 0;
         //登录
         $login_url = "http://xm.597.com/api/web/company.api";
         $this->curl($login_url, $this->config_login);
 
-        while((time()-$first_time) <= 600) {
+        while((time()-$first_time) <= $time_lit) {
             $i++;
             if($i > 2){
               $i = 0;
@@ -87,7 +90,13 @@ class RCW597 extends Baseclass
     public function getUserInfo($css,$result){
         preg_match('#简历编号：(.*?)<#', $result, $cid);//简历编号
         preg_match('#class="n">(.*?) <#', $result, $name);//姓名
-        preg_match('#<span id="spnBasicSex" v=""><i class="n"></i>(.*?)</span>#', $result, $sex);//性别
+        preg_match('#<span id="spnBasicSex" v=""><i class="n"></i>(.*?)</span>#', $result, $sex);//性别男
+        if(empty($sex)){
+            preg_match('#<span id="spnBasicSex" v=""><i class="v"></i>(.*?)</span>#', $result, $sex);//性别女
+            $sex = 0;
+        }else{
+            $sex = 1;
+        }
         preg_match('#class="y"></i>(.*?)<#', $result, $age);//年龄
         preg_match('#class="x"></i>(.*?)<#', $result, $education);//学历
         preg_match('#class="j"></i>(.*?)<#', $result, $experience);//工作经验
@@ -96,11 +105,10 @@ class RCW597 extends Baseclass
         $area = str_replace('户籍：','',$info1[1][1]);
         $area = explode(',',$area);
         $province = $this->getAreaCode($area[0]);
-        $city = $this->getAreaCode($area[1]);
-        if($sex[1]=='男'){
-            $sex = 1;
+        if(count($area) == 2){
+            $city = $this->getAreaCode($area[1]);
         }else{
-            $sex = 0;
+            $city = '';
         }
         $age = str_replace('岁','',$age[1]);
         $insertArr = array(
