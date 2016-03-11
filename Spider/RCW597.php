@@ -132,7 +132,7 @@ class RCW597 extends Baseclass
         $mysqli = $this->sqliConnect();
         $sql = 'select cid from cre_user_content where cid ="'.$insertArr['cid'].'"';
         $result=$mysqli->query($sql)->fetch_assoc();
-        if (true){
+        if (!true){
             $uid = $this->getUniqueUid();//获取随机数
             $insertUser="insert into cre_user (uid,user_name,password) values ({$uid},'597RCW','597RCW')";
             $mysqli->query($insertUser);
