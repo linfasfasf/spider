@@ -32,6 +32,7 @@ class RCW597 extends Baseclass
         if(empty($time_lit)){
             $time_lit = 600;
         }
+
         $i= 0;
         //登录
         $login_url = "http://xm.597.com/api/web/company.api";
@@ -39,9 +40,9 @@ class RCW597 extends Baseclass
 
         while((time()-$first_time) <= $time_lit) {
             $i++;
-            if($i > 2){
+            if($i > 10){
               $i = 0;
-                exit;
+ 
             }
             $url = "http://xm.597.com/company/resume/search.html?hddbuildseeker=&hddqueryString=&hddKeytype=0&hddPageSize=20&hddIsList=1&hddGroupJson=all%3A%3A1W%2B%3B%3B&hddpostvar=bf0539a8978b2fcaabe3a77beaf3f33e&hddIsfirstPost=1&act=search&qw%5B%5D=1&qw%5B%5D=2&txtKeyword=&expArea=&currArea=&calling=&nativeArea=&radSex=0&ddlMinWrokYear=&ddlMaxWrokYear=&txtAgeLower=&txtAgeUpper=&radMarriage=0&txtMinStature=&txtMaxStature=&page=".$i;
             $this->companySearch($url);
@@ -105,7 +106,7 @@ class RCW597 extends Baseclass
         $area = str_replace('户籍：','',$info1[1][1]);
         $area = explode(',',$area);
         $province = $this->getAreaCode($area[0]);
-        if(count($area) == 2){
+        if(count($area) >= 2){
             $city = $this->getAreaCode($area[1]);
         }else{
             $city = '';

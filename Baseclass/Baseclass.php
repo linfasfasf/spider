@@ -17,7 +17,9 @@ class Baseclass {
 	public function curl($url, $post=null){
 
         if (!file_exists($cookie = ROOT.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'cookie.txt')) {
-
+        	if (!is_dir(ROOT.DIRECTORY_SEPARATOR.'assets')) {
+        		mkdir(ROOT.DIRECTORY_SEPARATOR.'assets', 0755);
+        	}
         	touch($cookie);
         }
         $ch = curl_init();

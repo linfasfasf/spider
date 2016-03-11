@@ -12,8 +12,9 @@ $config = require_once($config);
 
 $args = getopt('b:h::aa');//从cmd获取输入参数，
 if (isset($args['h'])&&!$args['h']) {
-	echo "-b java =>test java_crashes;
-	-b cpp => test cpp_crashes";
+	echo "set which web spider to run ;
+	e.x:
+	-b RCW597 => RUN THE SPIDER OF 597RCW";
 }
 
 if (!empty($args['b'])) {
