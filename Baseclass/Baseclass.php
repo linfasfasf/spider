@@ -1,5 +1,7 @@
 <?php
 class Baseclass {
+	static private $_time = array();
+
 	public function test(){
 		echo "string";
 	}
@@ -14,7 +16,18 @@ class Baseclass {
 		return 'this area do not exists.';
 	}
 
-	public function curl($url, $post=null){
+
+	public function time_check($time_lit){
+		if (empty(self::$_time['begin'])) {
+			self::$_time['begin'] = time();
+			return true;
+		}elseif ((self::$_time['begin'] + $time_lit) >= time()) {
+			return true;
+		}
+		return false;
+	}
+
+	public function curl($url, $post=null, $cookie_str='', $referer=''){
 
         if (!file_exists($cookie = ROOT.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'cookie.txt')) {
         	if (!is_dir(ROOT.DIRECTORY_SEPARATOR.'assets')) {
@@ -28,12 +41,19 @@ class Baseclass {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        if (!empty($referer)) {
+        	curl_setopt($ch, CURLOPT_REFERER, $referer);
+        }
         if (!empty($post)) {
             curl_setopt($ch, CURLOPT_POST,1);
         	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         }
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+        if (!empty($cookie)) {
+        	curl_setopt($ch, CURLOPT_COOKIE, $cookie_str);
+        }else{
+	        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+	        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+    	}
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST , false);
 

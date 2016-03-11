@@ -28,9 +28,9 @@ class RCW597 extends Baseclass
 
     public function run($time_lit = null)
     {
-        $first_time = time();
+        // $first_time = time();
         if(empty($time_lit)){
-            $time_lit = 600;
+            $time_lit = 60;
         }
 
         $i= 0;
@@ -38,7 +38,7 @@ class RCW597 extends Baseclass
         $login_url = "http://xm.597.com/api/web/company.api";
         $this->curl($login_url, $this->config_login);
 
-        while((time()-$first_time) <= $time_lit) {
+        while($this->time_check($time_lit)) {
             $i++;
             if($i > 10){
               $i = 0;
