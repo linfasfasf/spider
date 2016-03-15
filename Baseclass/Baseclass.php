@@ -87,7 +87,7 @@ class Baseclass {
             curl_setopt($ch, CURLOPT_POST,1);
         	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         }
-        if (!empty($cookie)) {
+        if (!empty($cookie_str)) {
         	curl_setopt($ch, CURLOPT_COOKIE, $cookie_str);
         }else{
 	        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
