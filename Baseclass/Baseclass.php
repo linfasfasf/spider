@@ -16,6 +16,45 @@ class Baseclass {
 		return 'this area do not exists.';
 	}
 
+	public function insertIntoCreUser($uid, $username, $password){
+		$redis = $this->getRedisConn();
+		if ($redis->set($uid.':username', $username) && $redis->set($uid.':password', $password)){
+			return true;
+		}
+		return false;
+	}
+
+	public function insertIntoCreUserContent($uid, $flag, $content, $cid){
+		$redis = $this->getRedisConn();
+		if ($redis->set($uid.':flag', $flag) && $redis->set($uid.':content', $content)&& $redis->set($uid.':cid', $cid)) {
+			 return true; 
+		}
+		return false;
+	}
+
+	public function insertIntoCreUserInfo($uid, $sex, $name, $province, $education, $experience, $age){
+		$redis = $this->getRedisConn();
+		if ($redis->set($uid.':sex', $sex) && $redis->set($uid.':name', $name) && $redis->set($uid.':province', $province) && $redis->set($uid.':education', $education) && $redis->set($uid.':experience', $experience) && $redis->set($uid.':age', $age) ) {
+			return true;
+		}
+		return false;
+	}
+
+	public function getRedisConn(){
+		$redis = new Redis();
+		$redis->connect('127.0.0.1', 6379);
+
+		try {
+			$val = $redis->ping();
+			if (!$val) {
+				die('redis ping fail');
+			}
+		} catch (RedisException $e) {
+			die('can not connect  to redis!');
+		}
+		return $redis;
+	}
+
 
 	public function time_check($time_lit){
 		if (empty(self::$_time['begin'])) {

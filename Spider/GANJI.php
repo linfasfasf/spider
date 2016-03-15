@@ -45,7 +45,7 @@ class GANJI extends Baseclass{
 		var_dump($result);
 		var_dump($experience);
 		$this->saveLog($experience);
-
+		
 		
 		file_put_contents('C:/Users/Administrator/Desktop/result.html', $result);
 		die();

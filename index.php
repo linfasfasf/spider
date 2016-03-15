@@ -1,5 +1,6 @@
 <?php
 
+
 $run_per_time = 30;
 define('ROOT', dirname(__FILE__));
 $config = ROOT.'/config.php';
@@ -37,10 +38,7 @@ if (!empty($args['b'])) {
 
 function run($spider_info, $time_lit=false){
 	if (class_exists($spider_info['class'])) {
-			// $class_obj=  = new $spider_info['class']();
 			if (method_exists( $class_obj= new $spider_info['class'](), $spider_info['run'])) {
-				// $class_obj = new $spider_info['class']();
-				// $class_obj->$spider_info['run']();
 				call_user_func(array($class_obj, $spider_info['run']), $time_lit);//执行该入口方法
 			}else{
 				exit('the run method do not exist');

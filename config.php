@@ -1,9 +1,9 @@
 <?php
 
 return array(
-		'test'=>array(
-			'class'=>'Test',//类名
-			'run'=>'lin',//入口文件
+		'TEST'=>array(
+			'class'=>'TEST',//类名
+			'run'=>'test',//入口文件
 			),
 		
 		'RCW597'=>array(

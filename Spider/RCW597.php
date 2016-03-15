@@ -134,6 +134,9 @@ class RCW597 extends Baseclass
         $result=$mysqli->query($sql)->fetch_assoc();
         if (!$result){
             $uid = $this->getUniqueUid();//获取随机数
+
+            $this->insertIntoCreUser($uid, '597RCW', '597RCW');
+
             $insertUser="insert into cre_user (uid,user_name,password) values ({$uid},'597RCW','597RCW')";
             $mysqli->query($insertUser);
             if($mysqli->affected_rows < 1) {
@@ -141,12 +144,17 @@ class RCW597 extends Baseclass
             }
 
             $content = mysqli_escape_string($mysqli,$insertArr['content']);
+
+            $this->insertIntoCreUserContent($uid, '597RCW', $content, $insertArr['cid']);
+
             $insertContent="insert into cre_user_content (uid,flag,content,cid) values ({$uid},'597RCW','.$content.','".$insertArr['cid']."')";
             $mysqli->query($insertContent);
             if($mysqli->affected_rows < 1) {
                 $this->saveLog($mysqli->error, 'RCW597', $uid);
             }
 
+            $this->insertIntoCreUserInfo($uid, $insertArr['sex'], $insertArr['name'], $insertArr['province'], $insertArr['education'], $insertArr['experience'], $insertArr['age']);
+            
             $insertInfo="insert into cre_user_info (uid,sex,name,province,city,education,experience,age) values ({$uid},'{$insertArr['sex']}','{$insertArr['name']}'
                      ,'{$insertArr['province']}','{$insertArr['city']}','{$insertArr['education']}','{$insertArr['experience']}','{$insertArr['age']}')";
             $mysqli->query($insertInfo);
