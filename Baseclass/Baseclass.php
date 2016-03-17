@@ -1,11 +1,51 @@
 <?php
 class Baseclass {
 	static private $_time = array();
+	static protected $frame_conf;
+	protected $load;
+
+	public function __construct(){
+		$this->frame_conf = require_once(ROOT.'/frameworkconfig.php');
+		var_dump($this->frame_conf);
+		if ($this->frame_conf['redis']) {
+			$this->checkUpdateRedis();
+		}
+	}
+
+	
 
 	public function test(){
 		echo "string";
 	}
 
+	public function getFrameConf(){
+		return $this->frame_conf;
+	}
+
+	//检查是否更新redis
+	public function checkUpdateRedis(){
+		$redis   = $this->getRedisConn();
+		$mysqli  = $this->sqliConnect();
+		echo "intoupdateredis";
+		$query 	 = 'select uid from cre_user order by id desc limit 1';
+		$uid_arr = $mysqli->query($query)->fetch_array(MYSQLI_ASSOC);
+		var_dump($uid_arr);
+		if( !$redis->exists('uid:'.$uid_arr['uid'])){//如果数据库中最新的数据不再redis中即更新redis
+			echo "update redis";
+			$query 	 = 'select * from cre_user';
+			$result  = $mysqli->query($query);
+			$pipe    =  $redis->multi();
+			$redis->flushall();
+			while ($result_arr = $result->fetch_array(MYSQLI_ASSOC)) {
+				$pipe->set('uid:'.$result_arr['uid'], $result_arr['uid']);
+				$pipe->exec();
+			}
+		}
+
+		$mysqli->close();
+	}
+
+	//获取地区代码
 	public function getAreaCode($area){
 		foreach ($this->area as $value) {
 			// echo $value['name'];
@@ -16,6 +56,7 @@ class Baseclass {
 		return 'this area do not exists.';
 	}
 
+	//将要插入到creUser表中的数据写入到redis中
 	public function insertIntoCreUser($uid, $username, $password){
 		$redis = $this->getRedisConn();
 		if ($redis->set($uid.':username', $username) && $redis->set($uid.':password', $password)){
@@ -24,6 +65,7 @@ class Baseclass {
 		return false;
 	}
 
+	//将要插入到creUserContent中的数据写入到redis中
 	public function insertIntoCreUserContent($uid, $flag, $content, $cid){
 		$redis = $this->getRedisConn();
 		if ($redis->set($uid.':flag', $flag) && $redis->set($uid.':content', $content)&& $redis->set($uid.':cid', $cid)) {
@@ -32,9 +74,19 @@ class Baseclass {
 		return false;
 	}
 
-	public function insertIntoCreUserInfo($uid, $sex, $name, $province, $education, $experience, $age){
+	//将要插入到creUserInfo中的数据写入到redis中
+	public function insertIntoCreUserInfo($uid, $sex, $name, $province, $city, $education, $experience, $age){
 		$redis = $this->getRedisConn();
-		if ($redis->set($uid.':sex', $sex) && $redis->set($uid.':name', $name) && $redis->set($uid.':province', $province) && $redis->set($uid.':education', $education) && $redis->set($uid.':experience', $experience) && $redis->set($uid.':age', $age) ) {
+		if ($redis->set($uid.':sex', $sex) && $redis->set($uid.':name', $name) && $redis->set($uid.':province', $province) && $redis->set($uid.':city', $city) &&$redis->set($uid.':education', $education) && $redis->set($uid.':experience', $experience) && $redis->set($uid.':age', $age) ) {
+			return true;
+		}
+		return false;
+	}
+
+	//将uid数据插入到redis队列中
+	public function insertUidIntoRedis($uid){
+		$redis =  $this->getRedisConn();
+		if ($redis->lPush('uidList', $uid)) {
 			return true;
 		}
 		return false;
@@ -167,15 +219,23 @@ class Baseclass {
 	public function getUniqueUid() {
         $str = $this->creatRandStr(6, 'numeric');
         if (strlen(floor($str)) != 6){
-                $str = $this->getUniqueUid();
-        }else {
-            $mysqli = $this->sqliConnect();
-            $sql = 'select uid from cre_user where uid ='.$str;
-            $result=$mysqli->query($sql)->fetch_assoc();
-            if ($result){
-                $str = $this->getUniqueUid();
-            }
+            $str = $this->getUniqueUid();
         }
+
+       	if ($this->frame_conf['redis']) {
+       		$redis  =  $this->getRedisConn();
+       		if ($redis->exists('uid:'.$str)){
+               	$str = $this->getUniqueUid();
+           	}	
+       	}else{
+       		$mysqli = $this->sqliConnect();
+       		$sql 	= 'select uid from cre_user where uid ='.$str;
+            $result=$mysqli->query($sql)->fetch_assoc();	
+            if ($result) {
+            	$str = $this->getUniqueUid();
+            }
+        }            
+                  
         return $str;
 	}
 

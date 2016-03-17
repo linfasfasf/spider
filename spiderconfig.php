@@ -3,7 +3,7 @@
 return array(
 		'TEST'=>array(
 			'class'=>'TEST',//类名
-			'run'=>'test',//入口文件
+			'run'=>'run',//入口文件
 			),
 		
 		'RCW597'=>array(
