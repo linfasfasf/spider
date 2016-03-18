@@ -13,5 +13,8 @@ return array(
 		'GANJI'=>array(
 			'class'=>'GANJI',
 			'run'=>'run',),
+		'SHUIDI'=>array(
+			'class'=>'SHUIDI',
+			'run'=>'run',)
 
 	);

@@ -6,7 +6,7 @@ class Baseclass {
 
 	public function __construct(){
 		$this->frame_conf = require_once(ROOT.'/frameworkconfig.php');
-		var_dump($this->frame_conf);
+		
 		if ($this->frame_conf['redis']) {
 			$this->checkUpdateRedis();
 		}
@@ -16,6 +16,14 @@ class Baseclass {
 
 	public function test(){
 		echo "string";
+	}
+
+	public function saveDataToDeskTop($data, $extension='html', $is_file_append=false){
+		if ($is_file_append) {
+			file_put_contents('C:/Users/Administrator/Desktop/restult.'.$extension, $data,FILE_APPEND);
+		}else{
+			file_put_contents('C:/Users/Administrator/Desktop/restult.'.$extension, $data);
+		}
 	}
 
 	public function getFrameConf(){
@@ -119,7 +127,7 @@ class Baseclass {
 	}
 
 	public function curl($url, $post=null, $cookie_str='', $referer=''){
-
+		sleep(0.6);
         if (!file_exists($cookie = ROOT.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'cookie.txt')) {
         	if (!is_dir(ROOT.DIRECTORY_SEPARATOR.'assets')) {
         		mkdir(ROOT.DIRECTORY_SEPARATOR.'assets', 0755);
@@ -145,6 +153,7 @@ class Baseclass {
 	        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 	        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
     	}
+    	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST , false);
 
