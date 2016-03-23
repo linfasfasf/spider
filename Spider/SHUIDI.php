@@ -19,7 +19,7 @@ class SHUIDI extends Baseclass{
 		// $res1 = file_get_contents($url);
 		$res = $this->curl($url);
 		// var_dump($res1);
-		sleep(1);
+		
 		var_dump($res);
 		// $this->saveDataToDeskTop($res1);
 		// die();

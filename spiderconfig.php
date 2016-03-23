@@ -14,7 +14,7 @@ return array(
 			'class'=>'GANJI',
 			'run'=>'run',),
 		'SHUIDI'=>array(
-			'class'=>'SHUIDI',
+			'class'=>'SD',
 			'run'=>'run',)
 
 	);

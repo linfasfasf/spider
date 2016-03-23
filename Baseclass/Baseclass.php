@@ -37,8 +37,9 @@ class Baseclass {
 		echo "intoupdateredis";
 		$query 	 = 'select uid from cre_user order by id desc limit 1';
 		$uid_arr = $mysqli->query($query)->fetch_array(MYSQLI_ASSOC);
+		// $companyQuery = 'select companyId from '
 		var_dump($uid_arr);
-		if( !$redis->exists('uid:'.$uid_arr['uid'])){//如果数据库中最新的数据不再redis中即更新redis
+		if( !$redis->exists('uid:'.$uid_arr['uid']) ){//如果数据库中最新的数据不再redis中即更新redis
 			echo "update redis";
 			$query 	 = 'select * from cre_user';
 			$result  = $mysqli->query($query);
@@ -138,8 +139,8 @@ class Baseclass {
     	curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         if (!empty($referer)) {
         	curl_setopt($ch, CURLOPT_REFERER, $referer);
         }
