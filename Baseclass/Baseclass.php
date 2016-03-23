@@ -34,23 +34,42 @@ class Baseclass {
 	public function checkUpdateRedis(){
 		$redis   = $this->getRedisConn();
 		$mysqli  = $this->sqliConnect();
+		
 		echo "intoupdateredis";
-		$query 	 = 'select uid from cre_user order by id desc limit 1';
-		$uid_arr = $mysqli->query($query)->fetch_array(MYSQLI_ASSOC);
-		// $companyQuery = 'select companyId from '
-		var_dump($uid_arr);
-		if( !$redis->exists('uid:'.$uid_arr['uid']) ){//如果数据库中最新的数据不再redis中即更新redis
-			echo "update redis";
+		$query 	 	= 'select uid from cre_user order by id desc limit 1';
+		$uid_arr 	= $mysqli->query($query)->fetch_array(MYSQLI_ASSOC);
+		$companyQuery 	= 'select companyid from cre_company order by id desc limit 1';
+		$companyid_arr  = $mysqli->query($companyQuery)->fetch_array(MYSQLI_ASSOC);
+		$uidUpdate		=  $redis->exists('uid:'.$uid_arr['uid']);
+		$companyidUpdeate = $redis->exists('companyid:'.$companyid_arr['companyid']);
+		//检查key是否存在必须在multi模式之前，multi无法使用exists等相应的方法
+		$pipe    =  $redis->multi();
+		if( !$uidUpdate ){//如果数据库中最新的数据不再redis中即更新redis
+			echo "update uid redis";
 			$query 	 = 'select * from cre_user';
 			$result  = $mysqli->query($query);
-			$pipe    =  $redis->multi();
+			
 			$redis->flushall();
-			while ($result_arr = $result->fetch_array(MYSQLI_ASSOC)) {
-				$pipe->set('uid:'.$result_arr['uid'], $result_arr['uid']);
-				$pipe->exec();
-			}
+			while ($result_arr = $result->fetch_array(MYSQLI_ASSOC) ) {				
+				$pipe->set('uid:'.$result_arr['uid'], $result_arr['uid']);				
+			}			
+			$pipe->exec();			
 		}
-
+		
+		
+		if (!$companyidUpdeate ) {
+			echo "update companyid to redis";
+			$companyQuery = 'select companyid from cre_company';
+			$companyRes   = $mysqli->query($companyQuery);
+			
+			while ($companyArr = $companyRes->fetch_array(MYSQLI_ASSOC)) {
+				var_dump($companyArr['companyid']);
+				
+				$pipe->set('companyid:'.$companyArr['companyid'], $companyArr['companyid']);
+			}
+			$pipe->exec();
+		}
+		
 		$mysqli->close();
 	}
 

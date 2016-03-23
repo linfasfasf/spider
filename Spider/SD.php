@@ -7,7 +7,7 @@ class SD extends Baseclass{
 	}
 
 	public function main(){
-		$currentPage 	= 0;
+		$currentPage 	= 660;
 		while (true) {
 			sleep(0.5);
 			$currentPage++;
@@ -31,7 +31,21 @@ class SD extends Baseclass{
 		$key		 = '*';
 		$pageSize 	 = 20;
 		$searchApi = 'http://m.shuidixy.com/mobile/v1/company/search?curpage='.$currentPage.'&key='.$key.'&pagesize='.$pageSize.'&pname=shuidixy&ptime=1458527316344&userdevid=0b41226148657c8cd4bf24ffed1da6ec&userdevtype=1&vkey=875dfeaa9568bf546e437ff7e1e515fe';
-		return file_get_contents($searchApi);		
+		return $this->curl_simple($searchApi);		
+
+	}
+
+
+	public function curl_simple($url){
+		$ch	= curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+		$data = curl_exec($ch);
+		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) ==502){
+			$data = $this->curl_simple($url);
+		}
+		return $data;
 	}
 
 
@@ -54,34 +68,37 @@ class SD extends Baseclass{
 			$operationStartdate = $content['operationStartdate'];
 			$companyAddress		= $content['companyAddress'];
 			$redis = $this->getRedisConn();
-			$redis->set($companyId.':companyName', $companyName);
-			$redis->set($companyId.':province', $province);
-			$redis->set($companyId.':companyType', $companyType);
-			$redis->set($companyId.':legalPerson', $legalPerson);
-			$redis->set($companyId.':capital', $capital);
-			$redis->set($companyId.':companyCode', $companyCode);
-			$redis->set($companyId.':businessScope', $businessScope);
-			$redis->set($companyId.':companyStatus', $companyStatus);
-			if (is_array($partnerStockName)) {
-				foreach ($partnerStockName as $partnerStockeNameVal) {
-					$redis->lpush($companyId.":partnerStockName", $partnerStockeNameVal);	
+			if (!$redis->exists('companyid:'.$companyId)) {
+				
+				$redis->set($companyId.':companyName', $companyName);
+				$redis->set($companyId.':province', $province);
+				$redis->set($companyId.':companyType', $companyType);
+				$redis->set($companyId.':legalPerson', $legalPerson);
+				$redis->set($companyId.':capital', $capital);
+				$redis->set($companyId.':companyCode', $companyCode);
+				$redis->set($companyId.':businessScope', $businessScope);
+				$redis->set($companyId.':companyStatus', $companyStatus);
+				if (is_array($partnerStockName)) {
+					foreach ($partnerStockName as $partnerStockeNameVal) {
+						$redis->lpush($companyId.":partnerStockName", $partnerStockeNameVal);	
+					}
 				}
-			}
-			if (is_array($employeeName)) {
-				foreach ($employeeName as $employeeNameVal) {
-					$redis->lpush($companyId.':employeeName', $employeeNameVal);
-				}			
-			}		
-			if (is_array($trademark)) {
-				foreach ($trademark as $trademarkVal) {
-					$redis->lpush($companyId.':trademark', $trademarkVal);
+				if (is_array($employeeName)) {
+					foreach ($employeeName as $employeeNameVal) {
+						$redis->lpush($companyId.':employeeName', $employeeNameVal);
+					}			
+				}		
+				if (is_array($trademark)) {
+					foreach ($trademark as $trademarkVal) {
+						$redis->lpush($companyId.':trademark', $trademarkVal);
+					}
 				}
+				$redis->set($companyId.':authority', $authority);
+				$redis->set($companyId.':operationStartDate', $operationStartdate);
+				$redis->set($companyId.':companyAddress', $companyAddress);
+				$redis->lpush('companyId', $companyId);
+				$redis->set('companyid:'.$companyId, $companyId);
 			}
-			$redis->set($companyId.':authority', $authority);
-			$redis->set($companyId.':operationStartDate', $operationStartdate);
-			$redis->set($companyId.':companyAddress', $companyAddress);
-			$redis->lpush('companyId', $companyId);
-
 
 		}
 	}
