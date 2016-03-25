@@ -146,6 +146,19 @@ class Baseclass {
 		return false;
 	}
 
+	public function curl_simple($url){
+		$ch	= curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+		$data = curl_exec($ch);
+		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) ==502){
+			sleep(5);
+			$data = $this->curl_simple($url);			
+		}
+		return $data;
+	}
+	
 	public function curl($url, $post=null, $cookie_str='', $referer=''){
 		sleep(0.6);
         if (!file_exists($cookie = ROOT.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'cookie.txt')) {
