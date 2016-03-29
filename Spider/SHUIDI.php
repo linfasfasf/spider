@@ -141,7 +141,7 @@ class SHUIDI extends Baseclass{
 
 	//将companyid推送到redis队列中
 	public function getCompanyIdToRedisList($len, $redis){
-		$unGetQuery = 'SELECT a.companyid FROM `cre_company_ext` a LEFT JOIN cre_partner_info b on 
+		$unGetQuery = 'SELECT a.companyid FROM `cre_company_ext` a LEFT JOIN cre_tmp b on 
 						a.companyid = b.companyid WHERE b.companyid is null AND a.id<'.$len;//获取未爬取的companyid
 		$mysqli = $this->sqliConnect();
 		$queryRes = $mysqli->query($unGetQuery);

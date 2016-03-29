@@ -1,4 +1,4 @@
 <?php
 return array(
-	'redis'=>1
+	'redis'=>false
 );

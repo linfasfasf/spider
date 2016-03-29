@@ -23,5 +23,10 @@ return array(
 		'SHUIDIEXT'=>array(
 			'class'=>'SHUIDI',
 			'run'=>'run',	
-			)
+		),
+
+		'SPIDER'=>array(
+			'class'=>'SPIDER',
+			'run'=>'run',
+		),
 	);

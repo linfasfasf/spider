@@ -175,7 +175,6 @@ function saveCompany($redis, $mysqli){//水滴信用同步脚本
 			
 			//执行数据库插入动作
 			try{
-				var_dump($courtQuery);
 				if(strlen($partnerQuery) != 6){
 					$partnerQuery	= "insert into cre_partner_info (companyid, partnerid, stock_name, stock_capital, proportion, par_companyid)".$partnerQuery;
 					if($mysqli->query($partnerQuery) && $mysqli->errno){
@@ -193,9 +192,8 @@ function saveCompany($redis, $mysqli){//水滴信用同步脚本
 					if($mysqli->query($courtQuery) && $mysqli->errno){
 						$redis->lpush('errorList', $companyid);
 					}
-					var_dump($courtQuery);
-					var_dump($mysqli->error);
 				}
+				$mysqli->query("insert into cre_tmp (companyid) values ($companyid)");//将更新过的信息插入到临时表
 
 			}catch(exception $e){
 				var_dump($e);
