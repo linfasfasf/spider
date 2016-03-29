@@ -21,7 +21,6 @@ class SD extends Baseclass{
 
 			$contentRes = $searchRes['data']['content'];
 			$this->saveContentIntoRedis($contentRes);
-			// die();
 		}
 		
 
@@ -50,6 +49,10 @@ class SD extends Baseclass{
 				sleep(3);
 				$data	= $this->curl_simple($url);
 			}
+		}
+		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 502){
+			sleep(5);
+			$data 	= $this->curl_simple($url);
 		}
 		
 		return $data;

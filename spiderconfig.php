@@ -8,13 +8,20 @@ return array(
 		
 		'RCW597'=>array(
 			'class'=>'RCW597',
-			'run'=>'run'),
+			'run'=>'run'
+		),
 
 		'GANJI'=>array(
 			'class'=>'GANJI',
-			'run'=>'run',),
+			'run'=>'run',
+		),
 		'SHUIDI'=>array(
 			'class'=>'SD',
-			'run'=>'run',)
+			'run'=>'run',
+		),
 
+		'SHUIDIEXT'=>array(
+			'class'=>'SHUIDI',
+			'run'=>'run',	
+			)
 	);

@@ -152,10 +152,21 @@ class Baseclass {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
 		$data = curl_exec($ch);
-		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) ==502){
-			sleep(5);
-			$data = $this->curl_simple($url);			
+		if(curl_errno($ch)){
+			if(curl_getinfo($ch, CURLINFO_HTTP_CODE) ==502){
+				sleep(5);
+				$data = $this->curl_simple($url);			
+			}else{
+				sleep(3);
+				$data = $this->curl_simple($url);
+			}
+		
 		}
+		if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 502){
+			sleep(5);
+			$data 	= $this->curl_simple($url);
+		}
+		
 		return $data;
 	}
 	
