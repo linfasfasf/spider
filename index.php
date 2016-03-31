@@ -3,6 +3,7 @@
 
 $run_per_time = 30;
 define('ROOT', dirname(__FILE__));
+define('DEBUG', TRUE);
 $config = ROOT.'/spiderconfig.php';
 $base_path = ROOT.'/Baseclass/';
 $spider_path = ROOT.'/spider';

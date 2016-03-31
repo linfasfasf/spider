@@ -29,4 +29,5 @@ return array(
 			'class'=>'SPIDER',
 			'run'=>'run',
 		),
+		
 	);
