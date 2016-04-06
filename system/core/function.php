@@ -17,7 +17,7 @@ if(!function_exists('load_class')){
 		
 		//look for the class first appliction/ then  system/
 		if(!empty($module)){
-			if(file_exists(APPPATH.'/'.$mudule.'/'.$directory.'/'.$class.'.php')){
+			if(file_exists(APPPATH.'/'.$module.'/'.$directory.'/'.$class.'.php')){
 				$name	= $class;
 				if(!class_exists($name) === FALSE){
 					require_once(APPPATH.'/'.$mudule.'/'.$directory.'/'.$class.'.php');
@@ -25,9 +25,9 @@ if(!function_exists('load_class')){
 			}
 
 		}else{//if not set module look for system directory
-			if(file_exists(SYSDIR.'/'.$directory.'/'.$class.'.php')){
+			if(file_exists(SYSDIR.'/'.$directory.'/'.$class.EXT)){
 				$name	=  $class;
-				var_dump(SYSDIR.'/'.$directory.'/'.$class.'.php');
+				var_dump(SYSDIR.'/'.$directory.'/'.$class.EXT);
 				if(class_exists($name) === FALSE){
 					require_once(SYSDIR.'/'.$directory.'/'.$class.'.php');
 					$module	= 'system';
@@ -106,5 +106,25 @@ if(!function_exists('set_config')){
 			}
 		}
 		return $_config;
+	}
+}
+
+if(!function_exists('get_file')){
+	function get_file($dir){
+		if(!is_dir($dir)){
+			return false;
+		}
+		$result	= array();
+		$cddir	= scandir($dir);
+		foreach($cddir as $key =>$val){
+			if(!in_array($val, array('.', '..'))){
+				if(is_dir($dir.'/'.$val)){
+					$result[$val]	= get_file($dir.'/'.$val);
+				}else{
+					$result[]	= $val;
+				}
+			}
+		}
+		return $result;
 	}
 }

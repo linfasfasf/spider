@@ -5,6 +5,7 @@
 	var_dump($options);
 
 	if(isset($options['m'])){
+		//static $module;
 		$module		=  $options['m'];
 	}
 
@@ -13,7 +14,7 @@
 
 	}
 
-	if(!isset($options['b'])){
+	if(!isset($options['m'])){
 		showCmdMsg();	
 	}
 

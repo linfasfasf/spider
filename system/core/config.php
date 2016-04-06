@@ -6,6 +6,7 @@ class Config {
 	public $config		= array();
 	public $is_loaded	= array();
 	public $_config_path	= array();
+	public static $module;
 
 	
 	//load the common config file , to get the framwork config info
@@ -19,13 +20,15 @@ class Config {
 		$this->config	=& get_config('config');
 		var_dump($this->config);
 		
-		if(empty($module)){
+		if(!empty($module)){
+			$this->module	= $module;
 			if(file_exists(APPPATH.'/'.$module.'/config/config.php')){
 				$this->config	= get_config('config', $module);
 			}else{
 				exit('the module '.$module.' config did not exists!');
 			}
 		}else{
+			$this->module	= $this->config['default_module'];
 			if(file_exists(APPPATH.'/'.$this->config['default_module'].'/config/config.php')){
 				$this->config	=  get_config('config', $this->config['default_module']);
 			}else{
@@ -33,8 +36,8 @@ class Config {
 			}
 		}
 		
-			$this->is_loaded	= $this->config;
-
+		$this->is_loaded	= $this->config;
+		return $this;	
 	}
 	
 	//get the config item info

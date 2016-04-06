@@ -12,5 +12,14 @@ if(empty($module)){
 	$CFG->init();
 }else{
 	$CFG->init($module);
-}	
+}
+
+//init the super class controller,to load 
+$controller	=& load_class('controller', 'core');
+
+
+//load class router 
+$RTR	=& load_class('router', 'core');
+$RTR->auto_load($module);//require compoenents and controller
+
 
