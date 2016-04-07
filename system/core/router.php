@@ -21,12 +21,15 @@ class Router {
 		
 	}
 
+	//load the components and controller floder
 	public function auto_load($module){
 		//allow the componenets no exists
 		if(is_dir(APPPATH.'/'.$module.'/components')){
 			$file_arr	= get_file(APPPATH.'/'.$module.'/components');
-			foreach($file_arr as $file_name){
-				load_class($file_name, 'compenents', $module);
+			if(count($file_arr) > 0){
+				foreach($file_arr as $file_name){
+					load_class($file_name, 'compenents', $module);
+				}
 			}
 		}
 
@@ -34,8 +37,10 @@ class Router {
 			exit($module.' controller directory does not exists ');
 		}else{
 			$controller_arr	= get_file(APPPATH.'/'.$module.'/controller');
-			foreach($controller_arr as $controller){
-				load_class($controller, 'controller', $module);
+			if(count($controller_arr) > 0){
+				foreach($controller_arr as $controller){
+					load_class($controller, 'controller', $module);
+				}
 			}
 		}
 

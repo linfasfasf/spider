@@ -4,9 +4,14 @@
 class Config {
 
 	public $config		= array();
+
 	public $is_loaded	= array();
+
 	public $_config_path	= array();
+
 	public static $module;
+
+	public static $function;
 
 	
 	//load the common config file , to get the framwork config info
@@ -16,9 +21,13 @@ class Config {
 	}
 	
 	//load the common config and module config file ,and the module config is effecter than common file
-	public function init($module = ''){
+	public function init($module = '', $function = ''){
 		$this->config	=& get_config('config');
 		var_dump($this->config);
+
+		if(!empty($function)){
+			$this->function	= $function;
+		}
 		
 		if(!empty($module)){
 			$this->module	= $module;

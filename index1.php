@@ -9,6 +9,10 @@
 		$module		=  $options['m'];
 	}
 
+	if(isset($option['f'])){
+		$method	=  $options['f'];
+	}
+
 	if(isset($options['h'])){
 		showCmdMsg();
 
