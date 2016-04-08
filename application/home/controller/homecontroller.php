@@ -2,7 +2,7 @@
 class homecontroller extends admincontroller{
 	public function __construct(){
 		parent::__construct();
-		echo 'this is homecontroller '
+		echo 'this is homecontroller ';
 	}
 
 	public function config(){

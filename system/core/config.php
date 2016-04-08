@@ -9,10 +9,11 @@ class Config {
 
 	public $_config_path	= array();
 
-	public static $module;
+	public  static $module;
 
-	public static $function;
+	public  static $method;
 
+	public  static $controller;
 	
 	//load the common config file , to get the framwork config info
 	public function __construct(){
@@ -21,23 +22,31 @@ class Config {
 	}
 	
 	//load the common config and module config file ,and the module config is effecter than common file
-	public function init($module = '', $function = ''){
+	public function init($module = '', $controller = '', $method = ''){
 		$this->config	=& get_config('config');
 		var_dump($this->config);
 
-		if(!empty($function)){
-			$this->function	= $function;
+		if(!empty($controller)){
+			self::$controller	= $controller;
+		}else{
+			self::$controller	= $this->config['default_controller'];
+		}
+
+		if(!empty($method)){
+			self::$method	= $method;
+		}else{
+			self::$method	= $this->config['default_method'];
 		}
 		
 		if(!empty($module)){
-			$this->module	= $module;
+			self::$module	= $module;
 			if(file_exists(APPPATH.'/'.$module.'/config/config.php')){
 				$this->config	= get_config('config', $module);
 			}else{
 				exit('the module '.$module.' config did not exists!');
 			}
 		}else{
-			$this->module	= $this->config['default_module'];
+			self::$module	= $this->config['default_module'];
 			if(file_exists(APPPATH.'/'.$this->config['default_module'].'/config/config.php')){
 				$this->config	=  get_config('config', $this->config['default_module']);
 			}else{
@@ -49,6 +58,43 @@ class Config {
 		return $this;	
 	}
 	
+	public function load($file_name = '', $section = false){
+		if(empty($this->is_load)){
+			$this->init();
+		}
+		if(in_array($file_name, $this->is_loaded, TRUE)){
+			return true;
+		}
+		if(!empty($this->module)){
+			if(file_exists($file = APPPATH.'/'.self::$module.'/config/'.$file_name.EXT)){
+				include_once($file);
+			}else{
+				return FALSE;
+			}
+		}else{
+			if(file_exists($file = APPPATH.'/config/'.$file_name.EXT)){
+				include_once($file);
+			}else{
+				return FALSE;
+			}
+		}
+
+		if($section == TRUE){
+			if(isset($this->config[$file_name])){
+				$this->config[$file_name]	= array_merge($this->config[$file_name], $config);
+			}else{
+				$this->config[$file_name]	= $config;
+			}
+		}else{
+			$this->config	= array_merge($this->config, $config);
+		}
+
+		$this->is_loaded[]	= $file_name;
+		unset($config);
+		
+	}
+
+
 	//get the config item info
 	public function item ($item, $index = ''){
 		if($index == ''){
@@ -76,5 +122,17 @@ class Config {
 		foreach($config as $key => $val){
 			$this->config[$key] 	= $val;
 		}
+	}
+
+	public function get_controller(){
+		return self::$controller;
+	}
+
+	public function get_module(){
+		return self::$module;
+	}
+
+	public function get_method(){
+		return self::$method;
 	}
 }

@@ -17,19 +17,24 @@ if(!function_exists('load_class')){
 		
 		//look for the class first appliction/ then  system/
 		if(!empty($module)){
-			if(file_exists(APPPATH.'/'.$module.'/'.$directory.'/'.$class.'.php')){
+			if(file_exists($file = APPPATH.'/'.$module.'/'.$directory.'/'.$class.'.php')){
 				$name	= $class;
-				if(!class_exists($name) === FALSE){
-					require_once(APPPATH.'/'.$mudule.'/'.$directory.'/'.$class.'.php');
+				if(class_exists($name) === FALSE){
+					if(DEBUG){
+						echo 'DEBUG: INFO LOADING application file '.$file.PHP_EOL;
+					}
+					require_once(APPPATH.'/'.$module.'/'.$directory.'/'.$class.'.php');
 				}
 			}
 
 		}else{//if not set module look for system directory
-			if(file_exists(SYSDIR.'/'.$directory.'/'.$class.EXT)){
+			if(file_exists($file = SYSDIR.'/'.$directory.'/'.$class.EXT)){
 				$name	=  $class;
-				var_dump(SYSDIR.'/'.$directory.'/'.$class.EXT);
 				if(class_exists($name) === FALSE){
-					require_once(SYSDIR.'/'.$directory.'/'.$class.'.php');
+					if(DEBUG){
+						echo 'DEBUG: INFO LOADING system file '.$file.PHP_EOL;
+					}
+					require_once($file);
 					$module	= 'system';
 				}
 			}
@@ -121,7 +126,8 @@ if(!function_exists('get_file')){
 				if(is_dir($dir.'/'.$val)){
 					$result[$val]	= get_file($dir.'/'.$val);
 				}else{
-					$result[]	= $val;
+					$filename	= explode('.', $val);
+					$result[]	= $filename[0];
 				}
 			}
 		}

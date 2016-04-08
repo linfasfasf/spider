@@ -10,15 +10,45 @@ class loader {
 	protected $_lp_library	= array();
 	public function __construct(){
 		$this->config	=& load_class('config', 'core');
+		return $this;
 	}
 
 
-	public function initialize(){
-		
+	public function autoload(){
+		if(file_exists($file = APPPATH.'/'.$this->config->get_module().'/config/autoload.php')){
+			include_once($file);
+			var_dump($this->config->get_module());
+			var_dump($autoload);
+		}else{
+			require_once(APPPATH.'/config/autoload.php');
+			exit('2222');
+		}
+
+		if(!isset($autoload)){
+			return FALSE;
+		}
+
+		if(count($autoload['config']) > 0){
+			foreach($autoload['config'] as $key =>$val){
+				$this->config->load($val);
+			}
+		}
+
+		if(count($autoload['library']) > 0){
+			foreach($autoload['library'] as $key =>$val){
+				$this->library($val);
+			}
+		}
+		//load database 
+		$this->database();
+
+		if(count($autoload['model']) > 0){
+			$this->model($autoload['model']);
+		}
 	}
 
 	public function library($library, $param =''){
-		$module	= $this->config->module;
+		$module	= $this->config->get_module();
 		if(is_array($library)){
 			foreach($library as $class){
 				$this->_lp_load_library($calss, $module);
@@ -57,6 +87,9 @@ class loader {
 	//$model the name of class
 	//$name  alias name of the model
 	public function model($model, $name= '', $param = ''){
+		if(DEBUG){
+			echo "DEBUG: INFO CLASS: loader METHOD: model ".PHP_EOL;
+		}
 		if(is_array($model)){
 			foreach($model as $base){
 				$this->model($base);
@@ -76,7 +109,7 @@ class loader {
 			exit(' the model name you are loading is the name of resource that is already bening used :'. $name);
 		}
 		$model	= strtolower($model);
-		if(!file_exists($file = APPPATH.'/'.$this->module.'/model/'.$name.EXT)){
+		if(!file_exists($file = APPPATH.'/'.$this->config->get_module().'/model/'.$name.EXT)){
 			exit('Unable to locate the model you have specified: '.$model);
 		}
 		if($param != FALSE && ! class_exists('LP_DB')){
@@ -87,7 +120,7 @@ class loader {
 		}
 
 		if(! class_exists('LP_Model')){
-			& load_class('model', 'core');
+			 load_class('model', 'core');
 		}
 		require_once($file);
 		$SC->$name	= new $model();
@@ -95,11 +128,11 @@ class loader {
 		return ;
 	}
 
-	public function database($param){
+	public function database($param = ''){
 		$SC	=& get_instance();
-		require_once(SYSDIR.'/database/DB.php');
+		require_once(SYSDIR.'/core/database/DB.php');
 		$SC->db	= '';
-		$SC->db	=& DB($param);
+		$SC->db	= DB($this->config->get_module(), $param);
 	}
 	
 }

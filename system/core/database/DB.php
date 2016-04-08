@@ -2,7 +2,7 @@
 
 
 if(!function_exists('DB')){
-	function DB($param = ''){
+	function DB($module, $param = ''){
 		if(!file_exists($file = APPPATH.'/'.$module.'/config/database.php')){
 			exit('The configuration file database.php does not exists .');
 		}
@@ -22,7 +22,7 @@ if(!function_exists('DB')){
 			$param	= $db[$active_group];
 		}
 		if(! class_exists('LP_DB')){
-			eval('calss LP_DB {}');
+			eval('class LP_DB {}');
 		}
 
 		require_once(SYSDIR.'/core/database/'.$param['dbdriver'].'/'.$param['dbdriver'].'_driver.php');

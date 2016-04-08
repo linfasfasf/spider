@@ -3,14 +3,22 @@
 
 	$options	= getopt('h:b:m:f:',array("debug:"));
 	var_dump($options);
+	$switch	= 0;
 
 	if(isset($options['m'])){
 		//static $module;
 		$module		=  $options['m'];
+		$switch		+= 1;
 	}
 
-	if(isset($option['f'])){
-		$method	=  $options['f'];
+	if(isset($options['f'])){
+		$method		=  $options['f'];
+		$switch		+= 3;
+	}
+
+	if(isset($options['b'])){
+		$controller	= $options['b'];
+		$switch		+= 5;
 	}
 
 	if(isset($options['h'])){
@@ -25,6 +33,7 @@
 	if(isset($options['debug'])){
 		define('DEBUG', TRUE);
 	}else{
+		echo 'debug close';
 		define('DEBUG', FALSE);
 	}
 	
