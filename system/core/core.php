@@ -49,8 +49,8 @@ $RTR->auto_load($module);//require compoenents floder
 $class	=  $RTR->fetch_controller();
 $method	=  $RTR->fetch_method();
 if(!class_exists($RTR->fetch_controller())){
-	if(!file_exists($file = $RTR->fetch_directory().'/'$class)){
-		exit('Unable to locate the specfied file, controller:'.$RTR->fetch_directory().'method :'.$method);
+	if(!file_exists($file = $RTR->fetch_directory().'/'.$class)){
+		exit('Unable to locate the specfied file, controller:'.$RTR->fetch_directory().' class:'.$class);
 	}else{
 		require_once($file);
 		unset($SC);

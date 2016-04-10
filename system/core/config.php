@@ -25,21 +25,32 @@ class Config {
 	public function init($module = '', $controller = '', $method = ''){
 		$this->config	=& get_config('config');
 		var_dump($this->config);
-
-		if(!empty($controller)){
-			self::$controller	= $controller;
-		}else{
-			self::$controller	= $this->config['default_controller'];
-		}
-
-		if(!empty($method)){
-			self::$method	= $method;
-		}else{
-			self::$method	= $this->config['default_method'];
-		}
 		
-		if(!empty($module)){
+		$score	= param_switch($controller, $module);
+		switch($score){
+			case 1:
+				self::$controller	= $controller;
+				break;
+			case 5:
+				$this->config
+		}
+
+		
+		if(!empty($module)){ 
 			self::$module	= $module;
+
+			if(!empty($controller)){
+				self::$controller	= $controller;
+			}else{
+				self::$controller	= $this->config['default_controller'];
+			}
+
+			if(!empty($method)){
+				self::$method	= $method;
+			}else{
+				self::$method	= $this->config['default_method'];
+			}
+
 			if(file_exists(APPPATH.'/'.$module.'/config/config.php')){
 				$this->config	= get_config('config', $module);
 			}else{

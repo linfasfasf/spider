@@ -134,3 +134,21 @@ if(!function_exists('get_file')){
 		return $result;
 	}
 }
+
+if(function_exists('function_switch')){
+	function param_switch($param1 = '',
+		$param2 = '', $param3 = ''){
+			$score	= 0;
+			if(!empty($param1)){
+				$score	+= 1;
+			}
+			if(!empty($param2)){
+				$score	+= 3;
+			}
+			if(!empty($param3)){
+				$score	+= 5;
+			}
+			
+			return $score;
+	}
+}

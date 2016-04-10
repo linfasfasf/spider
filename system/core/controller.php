@@ -17,4 +17,8 @@ class controller {
 	public static function &get_instance(){
 		return self::$instance;
 	}
+
+	public function run (){
+		echo "this is class controller mehood run";
+	}
 }
