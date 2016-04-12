@@ -4,8 +4,8 @@ $active_group	= 'default';
 
 $db['default']['hostname']	= 'localhost';
 $db['default']['username']	= 'root';
-$db['default']['password']	= '';
-$db['default']['database']	= 'cocosplay_system';
+$db['default']['password']	= '123456';
+$db['default']['database']	= 'qnd';
 $db['default']['dbdriver']	= 'mysqli';
 $db['default']['char_set']	= 'utf8';
 $db['default']['dbcollat']	= 'utf8_general_ci';

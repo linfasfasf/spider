@@ -23,41 +23,76 @@ class Config {
 	
 	//load the common config and module config file ,and the module config is effecter than common file
 	public function init($module = '', $controller = '', $method = ''){
-		$this->config	=& get_config('config');
-		var_dump($this->config);
 		
-		$score	= param_switch($controller, $module);
+		$score	= param_switch($module, $controller, $method);
 		switch($score){
 			case 1:
+				$this->config		=& get_config('config', $module);
+				self::$module		= $module;
+				if(empty($this->config['default_controller'])){
+					exit('ERROR: MSG '.$module.' config file default_controller not exists !');
+				}
+				self::$controller	= $this->config['controller'];
+				if(empty($this->config['default_method'])){
+					exit('ERROR: MSG '.$module.' config file default_method not exists !');
+				}
+				self::$method		= $this->config['method'];
+				break;
+			case 3:
+				$this->config		=& get_config('config');
+				self::$module		= $this->config['default_module'];
 				self::$controller	= $controller;
+				self::$method		= $this->config['default_method'];
 				break;
 			case 5:
-				$this->config
+				$this->config		= get_config('config');
+				self::$module		= $this->config['default_module'];
+				self::$controller	= $this->config['default_controller'];
+				self::$method		= $method;
+				break;
+			case 4:
+				$this->config		= get_config('config', $module);
+				self::$module		= $module;
+				self::$controller	= $controller;
+				if(empty($this->config['method'])){
+					exit('ERROR: MSG '.$module.' config file default_method not exists !');
+				}
+				self::$method		= $this->config['default_method'];
+				break;
+			case 6:
+				$this->config		= get_config('config', $module);
+				self::$module		= $module;
+				if(empty($this->config['default_controller'])){
+					exit('ERROR: MSG '.$module.' config file default_controller not exists !');
+				}
+				self::$controller	= $this->config['controller'];
+				self::$method		= $method;
+				break;
+			case 8:
+				$this->config		= get_config('config');
+				self::$module		= $this->config['default_module'];
+				self::$controller	= $controller;
+				self::$method		= $method;
+				break;
+			case 9:
+				$this->config		= get_config('config', $module);
+				self::$module		= $module;
+				self::$controller	= $controller;
+				self::$method		= $method;
+				break;
+			default :
+				exit('ERROR MSG param error');
 		}
 
+		var_dump($this->config);
 		
 		if(!empty($module)){ 
-			self::$module	= $module;
-
-			if(!empty($controller)){
-				self::$controller	= $controller;
-			}else{
-				self::$controller	= $this->config['default_controller'];
-			}
-
-			if(!empty($method)){
-				self::$method	= $method;
-			}else{
-				self::$method	= $this->config['default_method'];
-			}
-
 			if(file_exists(APPPATH.'/'.$module.'/config/config.php')){
 				$this->config	= get_config('config', $module);
 			}else{
 				exit('the module '.$module.' config did not exists!');
 			}
 		}else{
-			self::$module	= $this->config['default_module'];
 			if(file_exists(APPPATH.'/'.$this->config['default_module'].'/config/config.php')){
 				$this->config	=  get_config('config', $this->config['default_module']);
 			}else{

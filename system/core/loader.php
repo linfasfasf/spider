@@ -51,7 +51,7 @@ class loader {
 		$module	= $this->config->get_module();
 		if(is_array($library)){
 			foreach($library as $class){
-				$this->_lp_load_library($calss, $module);
+				$this->_lp_load_library($class, $module);
 			}
 		}
 		$lib_file	= APPPATH.'/'.$module.'/library/'.$library.EXT;
@@ -62,9 +62,14 @@ class loader {
 
 
 	public function _lp_load_library($class, $module){
-		if(!file_exists(APPPATH.'/'.$module.'/library/'.strtolower($class).EXT)){
-			exit('Unable to locate the library you have specified:'.$calss);
+		if(file_exists($file = APPPATH.'/'.$module.'/library/'.strtolower($class).EXT)){
+			require_once($file;)
+		}elseif(file_exists($file_lib = SYSDIR.'/library/'.strtolower($class).EXT)){
+			require_once($file_lib);
+		}else{
+			exit('ERROR: MSG the library '.$class.' is not exists !');
 		}
+
 		if(file_exists($file = APPPATH.'/'.$module.'/config/'.$class.EXT)){
 			require_once($file);
 		}
@@ -95,11 +100,9 @@ class loader {
 				$this->model($base);
 			}
 		}
-
 		if($model = ''){
 			return;
 		}
-		
 		if($name = ''){
 			$name	= $model;
 		}

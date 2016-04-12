@@ -1,24 +1,26 @@
 <?php
 
 
-	$options	= getopt('h:b:m:f:',array("debug:"));
+	$options	= getopt('h:c:m:f:',array("debug:"));
 	var_dump($options);
 	$switch	= 0;
 
 	if(isset($options['m'])){
-		//static $module;
 		$module		=  $options['m'];
-		$switch		+= 1;
+	}else{
+		$module		= '';
 	}
 
 	if(isset($options['f'])){
 		$method		=  $options['f'];
-		$switch		+= 3;
+	}else{
+		$method		= '';
 	}
 
-	if(isset($options['b'])){
-		$controller	= $options['b'];
-		$switch		+= 5;
+	if(isset($options['c'])){
+		$controller	= $options['c'];
+	}else{
+		$controller	= '';
 	}
 
 	if(isset($options['h'])){

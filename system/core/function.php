@@ -135,7 +135,7 @@ if(!function_exists('get_file')){
 	}
 }
 
-if(function_exists('function_switch')){
+if(!function_exists('param_switch')){
 	function param_switch($param1 = '',
 		$param2 = '', $param3 = ''){
 			$score	= 0;
