@@ -25,6 +25,9 @@ class Config {
 	public function init($module = '', $controller = '', $method = ''){
 		
 		$score	= param_switch($module, $controller, $method);
+		if(DEBUG){
+			echo "DEBUG: INFO switch score is ".$score.PHP_EOL;
+		}
 		switch($score){
 			case 1:
 				$this->config		=& get_config('config', $module);
@@ -81,7 +84,7 @@ class Config {
 				self::$method		= $method;
 				break;
 			default :
-				exit('ERROR MSG param error');
+				exit('ERROR MSG  input  param error');
 		}
 
 		var_dump($this->config);
@@ -105,12 +108,12 @@ class Config {
 	}
 	
 	public function load($file_name = '', $section = false){
-		if(empty($this->is_load)){
-			$this->init();
-		}
-		if(in_array($file_name, $this->is_loaded, TRUE)){
-			return true;
-		}
+//		if(count($this->is_loaded) == 0){
+//			$this->init();
+//		}
+//		if(in_array($file_name, $this->is_loaded, TRUE)){
+//			return true;
+//		}
 		if(!empty($this->module)){
 			if(file_exists($file = APPPATH.'/'.self::$module.'/config/'.$file_name.EXT)){
 				include_once($file);

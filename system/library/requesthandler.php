@@ -1,6 +1,6 @@
 <?php
 
-class requesthandler extends controller{
+class requesthandler extends dispatcher{
 
 	public $url;
 
@@ -18,9 +18,6 @@ class requesthandler extends controller{
 
 	public $cookie_str;
 
-	public $data;
-
-	public $ch;
 
 	public function __construct(){
 		if(!file_exists($cookiefile = ROOT.'/assets/cookie.txt')){
@@ -58,12 +55,29 @@ class requesthandler extends controller{
 				curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
 			}
 		}
-		$this->ch	= $ch;
+		self::$ch	= $ch;
 		return $this;
 	}
 
+
 	public function doCurl(){
-		$this->data	= curl_exec($this->ch);
-		curl_close($this->ch);
+		self::$data	= curl_exec(self::$ch);
+		
+	}
+
+	public function setCookieStr($cookie){
+		$this->cookie_str	= $cookie;
+	}
+
+	public function setPostData($post){
+		$this->post	= $post;
+	}
+
+	public function getData(){
+		return self::$data;
+	}
+
+	public function getHandler(){
+		return self::$ch;
 	}
 }

@@ -17,11 +17,8 @@ class loader {
 	public function autoload(){
 		if(file_exists($file = APPPATH.'/'.$this->config->get_module().'/config/autoload.php')){
 			include_once($file);
-			var_dump($this->config->get_module());
-			var_dump($autoload);
 		}else{
 			require_once(APPPATH.'/config/autoload.php');
-			exit('2222');
 		}
 
 		if(!isset($autoload)){
@@ -45,6 +42,7 @@ class loader {
 		if(count($autoload['model']) > 0){
 			$this->model($autoload['model']);
 		}
+		return $this;
 	}
 
 	public function library($library, $param =''){
@@ -63,7 +61,7 @@ class loader {
 
 	public function _lp_load_library($class, $module){
 		if(file_exists($file = APPPATH.'/'.$module.'/library/'.strtolower($class).EXT)){
-			require_once($file;)
+			require_once($file);
 		}elseif(file_exists($file_lib = SYSDIR.'/library/'.strtolower($class).EXT)){
 			require_once($file_lib);
 		}else{
@@ -100,10 +98,10 @@ class loader {
 				$this->model($base);
 			}
 		}
-		if($model = ''){
+		if($model == ''){
 			return;
 		}
-		if($name = ''){
+		if($name == ''){
 			$name	= $model;
 		}
 

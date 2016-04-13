@@ -1,6 +1,6 @@
 <?php
 
-$autoload['config']	= array();
+$autoload['config']	= array();//if set array('') would case an error
 
 $autoload['model']	= array();
 

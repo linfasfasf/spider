@@ -11,14 +11,10 @@ class controller {
 
 		$this->load	=& load_class('loader', 'core');
 		$this->load->autoload();
-		
 	}
 
 	public static function &get_instance(){
 		return self::$instance;
 	}
 
-	public function run (){
-		echo "this is class controller mehood run";
-	}
 }

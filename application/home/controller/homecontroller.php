@@ -14,4 +14,9 @@ class homecontroller extends admincontroller{
 		$this->load->model('testmodel');
 		$this->testmodel->test();
 	}
+
+	public function test(){
+		var_dump($this->load);
+		$this->load->library('spider');
+	}
 }
